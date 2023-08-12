@@ -14,7 +14,12 @@ const createUser = async (req,res)=>{
     password : hashPassword,
     role,
     isLoggedin,
-    ProfileInformation,
+    ProfileInformation: {FirstName:FirstName, LastName:LastName},
+    Payment_status : {
+      MembershipStart_date : MembershipStart_date,
+      MembershipExpiry_date : MembershipExpiry_date,
+      Paid_Memberships,
+    }
    });
    let data = await newUser.save();
    console.log(data);
@@ -115,27 +120,22 @@ const changePassword = async (req,res) => {
   }
 }
 
+
 const upgradeMembership = async (req, res) => {
 try {
   console.log("upgrade")
-  const{email,PaidMembership} = req.body;
-  // const newUser = new user({
-  //   PaidMembership,
-  // })
-
-  let userID = await user.findOne({email : email});
+  const userID = await user.findOne({email : req.body.email});
   console.log(userID);
 if(userID){
-  const memStatus = await user.findOneAndUpdate({email : email}, {PaidMembership:newUser.PaidMembership})
+  // const memStatus = await userID.updateOne({email : req.body.email}, { Payment_status: req.body. Payment_status})
+  const memStatus = await userID.updateOne({}, { $set: { Payment_status: "true" } 
+  });
   console.log(memStatus);
   res.send("Payment Status Updated Successfully");
 }
 else{
   res.status(501).send("user doesnt Exist");
 }
-const membership = new user({
-  PaidMembership,
-})
 } catch (err) {
   console.log(err);
   res.status(401).send("Internal Error");
@@ -154,3 +154,15 @@ module.exports = { createUser, userLogin, get_allUser, deleteUser, changePasswor
 // change the membership end date to today's date + 30 days
 // const upgradeMembership = async (req, res) => {};
 // // Integrate a payment gateway
+
+// {
+//   "email":"RashmiKR@gmail.com",
+//   "password":"7090",
+//   "Role":"User",
+//   "isLoggedin":"false",
+//   "FirstName":"Rashmi",
+//   "LastName":"KR",
+//   "MembershipStart_date":"01-01-2023",
+//   "MembershipExpiry_date":"01-30-2023",
+//   "Paid_Memberships":"true"
+// }

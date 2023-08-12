@@ -23,14 +23,12 @@ const ProfileInformationSchema =new Schema({
 
 const MembershipStatus = new Schema({
   MembershipStart_date:{
-    type : Number,
-    required : true,
+    type : String,
   },
   MembershipExpiry_date:{
-    type : Number,
-    required : true,
+    type : String,
   },
-  PaidMembership :{
+  Paid_Memberships :{
     type:Boolean,
     default:false,
   }
